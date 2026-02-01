@@ -1,0 +1,188 @@
+experiment_group: dinov2_srl
+experiment_name: 2gpu_ytvis2021
+
+globals:
+  NUM_SLOTS: 7
+  SLOT_DIM: 64
+  DINO_MODEL: vit_base_patch14_dinov2
+  FEAT_DIM: 768
+  NUM_PATCHES: 1369
+  NUM_GPUS: 2 # [1, 2, 4, 8]
+  BATCH_SIZE_PER_GPU: 64 # [8, 16, 32, 64]
+  TOTAL_BATCH_SIZE: "${mul: ${.NUM_GPUS}, ${.BATCH_SIZE_PER_GPU}}"
+  BASE_LR: 0.0001
+
+trainer:
+  max_steps: 100000
+  log_every_n_steps: 2500
+  val_check_interval: 2500
+  gradient_clip_val: 0.05
+
+optimizer:
+  name: Adam
+  lr: 0.0008
+  lr_scheduler:
+    name: exp_decay_with_warmup
+    warmup_steps: 2500
+    decay_steps: ${trainer.max_steps}
+
+model:
+  input_type: video
+  visualize: true
+  visualize_every_n_steps: 10000
+  losses:
+    loss_recon:
+      name: MSELoss
+      pred_dims:
+        - 0
+        - ${globals.FEAT_DIM}
+    loss_sc:
+      name: Slot_Slot_Contrastive_Loss
+      pred_key: processor.state
+      temperature: 0.1
+      batch_contrast: true
+      patch_inputs: false
+      keep_input_dim: true
+    loss_cl_dec:
+      name: DECConsLoss
+      pred_key: encoder.feat_recon
+      target_key: encoder.feat_orig_dec
+      patch_inputs: false
+      keep_input_dim: true
+      temperature: 0.1
+      topk: 16
+      train_start: 20000
+      group_frame: 4
+    loss_reg:
+      name: Slot_Redundancy_Loss
+      pred_key: state_attn_mask_reg
+      target_key: processor.state
+      patch_inputs: false
+      keep_input_dim: true
+      k: 3
+      train_start: 0
+      train_end: 10000
+    loss_cl_enc:
+      name: ENCConsLoss
+      pred_key: encoder.feat_trainable
+      target_key: encoder.feat_orig_enc
+      patch_inputs: false
+      keep_input_dim: true
+      temperature: 0.1
+      topk: 16
+      train_start: 0
+      group_frame: 4
+
+  loss_weights:
+    loss_recon: 1.0
+    loss_sc: 0.25
+    loss_cl_dec: 0.1
+    loss_reg: 0.1
+    loss_cl_enc: 0.1
+
+  initializer:
+    name: FixedLearnedInit
+    n_slots: ${globals.NUM_SLOTS}
+    dim: ${globals.SLOT_DIM}
+
+  encoder:
+    backbone:
+      name: TimmExtractor
+      model: ${globals.DINO_MODEL}
+      features: vit_block12
+      frozen: true
+      pretrained: true
+    output_transform:
+      name: networks.two_layer_mlp
+      inp_dim: ${globals.FEAT_DIM}
+      outp_dim: ${globals.SLOT_DIM}
+      hidden_dim: "${mul: ${globals.FEAT_DIM}, 2}"
+      layer_norm: true
+  grouper:
+    name: SlotAttention
+    inp_dim: ${globals.SLOT_DIM}
+    slot_dim: ${globals.SLOT_DIM}
+    n_iters: 2
+    use_mlp: true
+
+  latent_processor:
+    first_step_corrector_args:
+      n_iters: 3
+
+  decoder:
+    name: MLPDecoder
+    inp_dim: ${globals.SLOT_DIM}
+    outp_dim: ${globals.FEAT_DIM}
+    hidden_dims: [1024, 1024, 1024]
+    n_patches: ${globals.NUM_PATCHES}
+    n_slots: ${globals.NUM_SLOTS}
+
+  projector:
+    name: Projector
+    inp_dim: ${globals.FEAT_DIM}
+    outp_dim: ${globals.SLOT_DIM}
+
+  projector2:
+    name: Projector
+    inp_dim: ${globals.SLOT_DIM}
+    outp_dim: ${globals.SLOT_DIM}
+
+  predictor:
+    name: networks.TransformerEncoder
+    dim: ${globals.SLOT_DIM}
+    n_blocks: 1
+    n_heads: 4
+
+val_metrics:
+  ari:
+    name: VideoARI
+    ignore_background: false
+    pred_key: decoder_masks_hard
+    true_key: segmentations
+  image_ari:
+    name: ImageARI
+    video_input: true
+    ignore_background: false
+    pred_key: decoder_masks_hard
+    true_key: segmentations
+  mbo:
+    name: VideoIoU
+    matching: overlap
+    ignore_background: false
+    pred_key: decoder_masks_hard
+    true_key: segmentations
+  image_mbo:
+    name: ImageIoU
+    matching: overlap
+    video_input: true
+    ignore_background: false
+    pred_key: decoder_masks_hard
+    true_key: segmentations
+
+dataset:
+  train_shards: "ytvis2021_resized/ytvis-train-{000000..000083}.tar"
+  val_shards: "ytvis2021_resized/ytvis-validation-{000000..000029}.tar"
+  batch_size: ${globals.BATCH_SIZE_PER_GPU}
+  val_batch_size: 1
+  val_size: 200
+  num_workers: 4
+  num_val_workers: 1
+  train_pipeline:
+    chunk_size: 4
+    keys: [video]
+    sample_one_chunk_per_video: true
+    transforms:
+      name: ytvis_train
+      type: video
+      crop_type: short_side_resize_random
+      input_size: 518
+      num_classes: 10
+  val_pipeline:
+    use_chunks: false
+    keys: [video, segmentations]
+    transforms:
+      name: ytvis_val
+      type: video
+      crop_type: central
+      input_size: 518
+      num_classes: 25
