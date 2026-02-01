@@ -2,13 +2,13 @@ import argparse
 import torch
 from torchvision.io import read_video, read_image
 from omegaconf import OmegaConf
-from slotcontrast import configuration, models
-from slotcontrast.data.transforms import CropResize, Normalize, Resize, build_inference_transform
+from srl import configuration, models
+from srl.data.transforms import CropResize, Normalize, Resize, build_inference_transform
 import os
 import numpy as np
 import imageio
 from torchvision import transforms as tvt
-from slotcontrast.visualizations import mix_inputs_with_masks, draw_segmentation_masks_on_image, color_map
+from srl.visualizations import mix_inputs_with_masks, draw_segmentation_masks_on_image, color_map
 import matplotlib.pyplot as plt
 
 

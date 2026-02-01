@@ -46,7 +46,7 @@ The directory structure should look like:
 By default, datasets are expected to be located in the `/DATA` directory.
 If your dataset is stored elsewhere, you can change the default data path by modifying:
 - ```./data/utils.py```
-- ```./slotcontrast/data/utils.py```
+- ```./srl/data/utils.py```
 
 
 

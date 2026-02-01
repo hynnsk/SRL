@@ -5,7 +5,7 @@ from typing import Callable, List, Union
 import torch
 from torch.optim.lr_scheduler import LambdaLR
 
-from slotcontrast import utils
+from srl import utils
 
 
 @utils.make_build_fn(__name__, "scheduler")

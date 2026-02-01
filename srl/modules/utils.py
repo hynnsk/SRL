@@ -7,7 +7,7 @@ import torch
 from einops.layers.torch import Rearrange
 from torch import nn
 
-from slotcontrast.utils import config_as_kwargs, get_class_by_name, make_build_fn
+from srl.utils import config_as_kwargs, get_class_by_name, make_build_fn
 
 import torch.nn.functional as F
 from dataclasses import dataclass
@@ -46,7 +46,7 @@ def build_module(
     if group is None or group == "":
         group = default_group
 
-    from slotcontrast.modules import BUILD_FNS_BY_MODULE_GROUP
+    from srl.modules import BUILD_FNS_BY_MODULE_GROUP
 
     if group in BUILD_FNS_BY_MODULE_GROUP:
         build_fn = BUILD_FNS_BY_MODULE_GROUP[group]

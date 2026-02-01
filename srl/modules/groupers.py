@@ -3,8 +3,8 @@ from typing import Optional, Tuple
 import torch
 from torch import nn
 
-from slotcontrast.modules import networks
-from slotcontrast.utils import make_build_fn
+from srl.modules import networks
+from srl.utils import make_build_fn
 
 
 @make_build_fn(__name__, "grouper")

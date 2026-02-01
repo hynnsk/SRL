@@ -6,8 +6,8 @@ import torch
 from torch import nn
 from torch.nn import functional as F
 
-from slotcontrast.modules import utils
-from slotcontrast.utils import make_build_fn
+from srl.modules import utils
+from srl.utils import make_build_fn
 
 # Default weight init for MLP, CNNEncoder, CNNDecoder
 DEFAULT_WEIGHT_INIT = "default"

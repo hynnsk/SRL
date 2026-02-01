@@ -5,9 +5,9 @@ from typing import Any, Callable, Dict, Optional, Tuple
 import numpy as np
 import webdataset as wds
 
-from slotcontrast.data import transforms
-from slotcontrast.data.utils import remap_dict
-from slotcontrast.utils import config_as_kwargs
+from srl.data import transforms
+from srl.data.utils import remap_dict
+from srl.utils import config_as_kwargs
 
 
 def build(config, name: Optional[str] = "VideoPipeline", **kwargs):

@@ -5,8 +5,8 @@ import timm.layers.pos_embed
 import torch
 from torch import nn
 
-from slotcontrast.modules import networks, utils
-from slotcontrast.utils import config_as_kwargs, make_build_fn
+from srl.modules import networks, utils
+from srl.utils import config_as_kwargs, make_build_fn
 import math
 
 @make_build_fn(__name__, "decoder")

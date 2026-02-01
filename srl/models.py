@@ -7,8 +7,8 @@ import torchmetrics
 from torch import nn
 from torchvision.utils import make_grid
 
-from slotcontrast import configuration, losses, modules, optimizers, utils, visualizations
-from slotcontrast.data.transforms import Denormalize
+from srl import configuration, losses, modules, optimizers, utils, visualizations
+from srl.data.transforms import Denormalize
 
 def build(
     model_config: configuration.ModelConfig,

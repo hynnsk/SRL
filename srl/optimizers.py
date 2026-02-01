@@ -4,7 +4,7 @@ from typing import Any, Dict, List, Mapping, Optional
 import torch
 from torch import nn
 
-from slotcontrast import schedulers
+from srl import schedulers
 
 
 class OptimizerBuilder:

@@ -4,7 +4,7 @@ import einops
 import torch
 from torch import nn
 
-from slotcontrast import modules, utils
+from srl import modules, utils
 import math
 
 @utils.make_build_fn(__name__, "loss")

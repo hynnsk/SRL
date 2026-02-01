@@ -10,7 +10,7 @@ from einops.layers.torch import Rearrange
 from torchvision import transforms as tvt
 from torchvision.transforms import functional as tvt_functional
 
-from slotcontrast.data import transforms_video
+from srl.data import transforms_video
 
 IMAGENET_DEFAULT_MEAN = [0.485, 0.456, 0.406]
 IMAGENET_DEFAULT_STD = [0.229, 0.224, 0.225]

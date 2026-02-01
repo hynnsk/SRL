@@ -6,8 +6,8 @@ import torch
 import torchvision
 from torch import nn
 
-from slotcontrast.modules import utils
-from slotcontrast.utils import config_as_kwargs, make_build_fn
+from srl.modules import utils
+from srl.utils import config_as_kwargs, make_build_fn
 
 import torch.nn.functional as F
 

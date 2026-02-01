@@ -11,9 +11,9 @@ import webdataset as wds
 from omegaconf import ListConfig
 from torch.utils.data._utils import collate as torch_collate
 
-from slotcontrast.data import pipelines, transforms
-from slotcontrast.data.utils import get_data_root_dir, worker_init_function
-from slotcontrast.utils import config_as_kwargs
+from srl.data import pipelines, transforms
+from srl.data.utils import get_data_root_dir, worker_init_function
+from srl.utils import config_as_kwargs
 
 
 def build(config, name: Optional[str] = "WebdatasetDataModule", data_dir: Optional[str] = None):

@@ -3,7 +3,7 @@ from typing import Dict, List, Optional, Tuple, Union
 import einops
 import torch
 from torch import nn
-from slotcontrast.utils import make_build_fn
+from srl.utils import make_build_fn
 
 @make_build_fn(__name__, "projector")
 def build(config, name: str):

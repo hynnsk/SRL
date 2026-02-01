@@ -3,7 +3,7 @@ from typing import Any, Dict, List, Mapping, Optional
 import torch
 from torch import nn
 
-from slotcontrast.utils import make_build_fn
+from srl.utils import make_build_fn
 
 
 @make_build_fn(__name__, "video module")
