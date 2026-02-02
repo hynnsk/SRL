@@ -69,6 +69,14 @@ Here, ```[experiment_name]``` and ```[experiment_group]``` are defined in each c
 
 To resume training from a previous run, simply rerun the code with the same ```[experiment_name]``` and ```[experiment_group]```.
 
+## Checkpoints
+
+| Dataset | Backbone | Model file                                                                                       |
+| --- | --- |--------------------------------------------------------------------------------------------------|
+| MOVi-C | ViT-S/14, DINOv2 | [Checkpoint](https://drive.google.com/file/d/1xGzz_KAk3kNxXUyNAYg9plPEGaO_arfO/view?usp=sharing) |
+| YTVIS-2021 | ViT-B/14, DINOv2 | [Checkpoint](https://drive.google.com/file/d/1wSLS5mKlKkG3Gx57OY1ha3faJYv-gM9N/view?usp=sharing) |
+
+
 ## Citation
 If you find this project useful, please consider the following citation:
 ```
